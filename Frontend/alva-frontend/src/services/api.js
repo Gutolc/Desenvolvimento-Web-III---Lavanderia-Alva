@@ -1,3 +1,17 @@
-// Instância do Axios apontando para http://localhost:8080.
-// Deve criar um Interceptor de Request para buscar "alva_token" no localStorage.
-// O interceptor deve injetar o token no cabeçalho "Authorization" usando o formato Bearer em todas as requisições.
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "http://localhost:8080",
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("alva_token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+export default api;

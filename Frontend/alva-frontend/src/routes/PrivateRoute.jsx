@@ -1,3 +1,8 @@
-// Componente Wrapper (Porteiro) do react-router-dom.
-// Deve ler o AuthContext.
-// Se houver token, deve renderizar os {children}; caso contrário, deve redirecionar para a tela de Login.
+import { Navigate } from 'react-router-dom'
+import { useAuth } from "../contexts/AuthContext"
+
+export default function PrivateRoute({ children }) {
+	const { token } = useAuth()
+
+	return token ? children : <Navigate to="/" replace />
+}
