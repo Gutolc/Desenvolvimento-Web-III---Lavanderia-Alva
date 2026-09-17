@@ -1,40 +1,45 @@
-import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function KanbanView() {
-	const { logout } = useAuth()
-	const [buttonHovered, setButtonHovered] = useState(false)
+    const { logout } = useAuth()
+    const navigate = useNavigate()
 
-	return (
-		<main style={styles.page}>
-			<header style={styles.header}>
-				<strong style={styles.logo}>ALVA</strong>
-				<button
-					type="button"
-					onClick={logout}
-					onMouseEnter={() => setButtonHovered(true)}
-					onMouseLeave={() => setButtonHovered(false)}
-					style={{ ...styles.button, backgroundColor: buttonHovered ? '#0369A1' : '#0284C7' }}
-				>
-					Sair
-				</button>
-			</header>
-			<section style={styles.content}>
-				<p style={styles.kicker}>PAINEL OPERACIONAL</p>
-				<h1 style={styles.title}>Bem-vindo ao Kanban - Rota Protegida</h1>
-				<p style={styles.description}>Acompanhe os pedidos e o fluxo de trabalho da lavanderia.</p>
-			</section>
-		</main>
-	)
-}
-
-const styles = {
-	page: { minHeight: '100vh', backgroundColor: '#EFF6FF', color: '#1E293B' },
-	header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '22px 7%', backgroundColor: '#FFFFFF', borderBottom: '1px solid #38BDF8' },
-	logo: { color: '#0284C7', fontSize: '26px', letterSpacing: '4px' },
-	button: { border: 0, borderRadius: '6px', padding: '10px 22px', backgroundColor: '#0284C7', color: '#FFFFFF', fontWeight: 700, cursor: 'pointer' },
-	content: { maxWidth: '960px', margin: '0 auto', padding: '72px 7%' },
-	kicker: { color: '#0284C7', fontSize: '12px', fontWeight: 800, letterSpacing: '2px' },
-	title: { margin: '14px 0', fontSize: 'clamp(28px, 5vw, 48px)', lineHeight: 1.1 },
-	description: { color: '#1E293B', opacity: 0.75 },
+    return (
+        <main className="min-h-screen bg-blue-50 text-slate-800">
+            <header className="flex justify-between items-center px-[7%] py-5 bg-white border-b border-sky-400">
+                <strong className="text-sky-600 text-[26px] tracking-[4px]">ALVA</strong>
+                <div className="flex items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={() => navigate('/cadastro-funcionario')}
+                        className="border-0 rounded-md px-5 py-2.5 bg-sky-100 text-sky-700 font-bold cursor-pointer hover:bg-sky-200 transition-colors"
+                    >
+                        Novo Colaborador
+                    </button>
+                    <button
+                        type="button"
+                        onClick={logout}
+                        className="border-0 rounded-md px-5 py-2.5 bg-sky-600 text-white font-bold cursor-pointer hover:bg-sky-700 transition-colors"
+                    >
+                        Sair
+                    </button>
+                </div>
+            </header>
+            
+            <section className="max-w-[960px] mx-auto px-[7%] pt-[72px]">
+                <p className="text-sky-600 text-xs font-extrabold tracking-[2px]">
+                    PAINEL OPERACIONAL
+                </p>
+                
+                <h1 className="text-sky-600 my-3.5 text-[clamp(28px,5vw,48px)] leading-[1.1]">
+                    Bem-vindo ao Kanban - Rota Protegida
+                </h1>
+                
+                <p className="text-slate-800 opacity-75">
+                    Acompanhe os pedidos e o fluxo de trabalho da lavanderia.
+                </p>
+            </section>
+        </main>
+    )
 }

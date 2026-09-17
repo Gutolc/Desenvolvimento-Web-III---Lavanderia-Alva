@@ -1,7 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from './contexts/AuthContext'
 import LoginInterno from './pages/Login/LoginInterno'
 import KanbanView from './pages/Kanban/KanbanView'
+import CadastroFuncionario from './pages/register/CadastroFuncionario'
 import PrivateRoute from './routes/PrivateRoute'
 
 // Função auxiliar movida para cá
@@ -15,6 +16,7 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<LoginRoute />} />
                     <Route path="/kanban" element={<PrivateRoute><KanbanView /></PrivateRoute>} />
+                    <Route path="/cadastro-funcionario" element={<PrivateRoute><CadastroFuncionario /></PrivateRoute>} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
     )
