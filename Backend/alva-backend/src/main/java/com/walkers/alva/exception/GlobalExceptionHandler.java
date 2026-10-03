@@ -35,4 +35,20 @@ public class GlobalExceptionHandler {
                 "erro", "FORBIDDEN"
         ));
     }
+
+    @ExceptionHandler({CodigoInvalidoException.class, CodigoExpiradoException.class})
+    public ResponseEntity<Map<String, String>> handleCodigoInvalidoOuExpirado(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                "mensagem", ex.getMessage(),
+                "erro", "BAD_REQUEST"
+        ));
+    }
+
+    @ExceptionHandler(MuitasTentativasException.class)
+    public ResponseEntity<Map<String, String>> handleMuitasTentativas(MuitasTentativasException ex) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Map.of(
+                "mensagem", ex.getMessage(),
+                "erro", "TOO_MANY_REQUESTS"
+        ));
+    }
 }
