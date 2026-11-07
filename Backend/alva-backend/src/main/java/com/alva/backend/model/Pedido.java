@@ -1,15 +1,19 @@
 package com.alva.backend.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
+/**
+ * Entidade que representa um pedido na esteira de operação (Kanban) da lavanderia.
+ * Estende BaseEntity para herdar id + criadoEm + atualizadoEm já mapeados.
+ */
 @Entity
 @Table(name = "pedidos")
-public class Pedido {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Pedido extends BaseEntity {
 
     @Column(nullable = false)
     private String cliente;
@@ -18,14 +22,8 @@ public class Pedido {
     private String servico;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private StatusPedido status;
-
-    @Column(name = "criado_em", nullable = false, updatable = false)
-    private LocalDateTime criadoEm;
-
-    @Column(name = "atualizado_em")
-    private LocalDateTime atualizadoEm;
 
     public Pedido() {
     }
@@ -37,25 +35,10 @@ public class Pedido {
     }
 
     @PrePersist
-    protected void aoCriar() {
-        this.criadoEm = LocalDateTime.now();
-        this.atualizadoEm = LocalDateTime.now();
+    protected void aplicarStatusPadrao() {
         if (this.status == null) {
             this.status = StatusPedido.PENDENTE;
         }
-    }
-
-    @PreUpdate
-    protected void aoAtualizar() {
-        this.atualizadoEm = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCliente() {
@@ -80,21 +63,5 @@ public class Pedido {
 
     public void setStatus(StatusPedido status) {
         this.status = status;
-    }
-
-    public LocalDateTime getCriadoEm() {
-        return criadoEm;
-    }
-
-    public void setCriadoEm(LocalDateTime criadoEm) {
-        this.criadoEm = criadoEm;
-    }
-
-    public LocalDateTime getAtualizadoEm() {
-        return atualizadoEm;
-    }
-
-    public void setAtualizadoEm(LocalDateTime atualizadoEm) {
-        this.atualizadoEm = atualizadoEm;
     }
 }
