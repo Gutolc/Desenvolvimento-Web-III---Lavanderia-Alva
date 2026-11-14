@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo | Lavanderia Alva</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <span class="material-symbols-outlined">local_laundry_service</span>
+      Lavanderia <span>Alva</span>
+      <span class="admin-badge">Admin</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Ver Site</a></li>
+      <li><a href="precos.html">Tabela Pública</a></li>
+      <li id="navKanbanAdmin" style="display: none;"><a href="kanban.html" class="active">Esteira Kanban (Pedidos)</a></li>
+      <li id="logoutItem" style="display: none;">
+        <button type="button" class="btn btn-secondary btn-nav" onclick="realizarLogout()">
+          <span class="material-symbols-outlined">logout</span> Sair
+        </button>
+      </li>
+    </ul>
+  </header>
+
+  <main class="admin-wrapper">
+    <section id="loginSection" class="login-container">
+      <div class="card login-card">
+        <div class="ico login-ico">
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+        </div>
+        <h1>Acesso Restrito</h1>
+        <p>Entre com suas credenciais administrativas para gerenciar serviços e preços.</p>
+
+        <form id="loginForm" class="login-form">
+          <div class="form-group">
+            <label for="adminEmail">E-mail ou Usuário</label>
+            <input type="text" id="adminEmail" placeholder="admin@alva.com.br" required>
+          </div>
+          <div class="form-group">
+            <label for="adminPass">Senha</label>
+            <input type="password" id="adminPass" placeholder="••••••••" required>
+          </div>
+          <p id="loginError" class="error-msg" style="display: none;">Credenciais inválidas.</p>
+          <button type="submit" class="btn btn-primary full-width">
+            <span class="material-symbols-outlined">login</span>
+            Entrar no Painel
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <div id="dashboardSection" style="display: none;">
+      <section class="admin-stats">
+        <div class="card stat-box">
+          <span class="material-symbols-outlined">inventory_2</span>
+          <div>
+            <strong id="statTotal">0</strong>
+            <span>Produtos Cadastrados</span>
+          </div>
+        </div>
+        <div class="card stat-box">
+          <span class="material-symbols-outlined icon-success">check_circle</span>
+          <div>
+            <strong id="statAtivos">0</strong>
+            <span>Serviços Ativos</span>
+          </div>
+        </div>
+        <div class="card stat-box">
+          <span class="material-symbols-outlined icon-muted">pause_circle</span>
+          <div>
+            <strong id="statInativos">0</strong>
+            <span>Serviços Pausados</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-grid">
+        <aside class="card form-panel">
+          <div class="panel-header">
+            <span class="material-symbols-outlined">add_circle</span>
+            <h2 id="formTitle">Incluir Novo Produto</h2>
+          </div>
+
+          <form id="productForm" class="admin-form">
+            <input type="hidden" id="prodId">
+            <div class="form-group">
+              <label for="prodCategoria">Categoria</label>
+              <select id="prodCategoria" required>
+                <option value="Volumosos / Casa">Volumosos / Casa</option>
+                <option value="Cama, Mesa e Banho">Cama, Mesa e Banho</option>
+                <option value="Dia a Dia (Básicas)">Dia a Dia (Básicas)</option>
+                <option value="Alfaiataria e Finas">Alfaiataria e Finas</option>
+                <option value="Inverno e Especiais">Inverno e Especiais</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="prodNome">Nome do Item / Serviço</label>
+              <input type="text" id="prodNome" placeholder="Ex: Edredom Casal / Queen" required>
+            </div>
+            <div class="form-group">
+              <label for="prodUnidade">Unidade de Cobrança</label>
+              <select id="prodUnidade" required>
+                <option value="Unidade">Unidade</option>
+                <option value="Metro quadrado (m²)">Metro quadrado (m²)</option>
+                <option value="Metro linear (m)">Metro linear (m)</option>
+                <option value="Jogo">Jogo</option>
+                <option value="Conjunto">Conjunto</option>
+                <option value="Cesto fechado">Cesto fechado</option>
+              </select>
+            </div>
+            <div class="price-inputs-grid">
+              <div class="form-group"><label for="precoLavar">Só Lavar (R$)</label><input type="number" id="precoLavar" step="0.50" min="0" placeholder="0,00"></div>
+              <div class="form-group"><label for="precoPassar">Só Passar (R$)</label><input type="number" id="precoPassar" step="0.50" min="0" placeholder="Opcional"></div>
+              <div class="form-group"><label for="precoCompleto">Completo (R$)</label><input type="number" id="precoCompleto" step="0.50" min="0" placeholder="Opcional"></div>
+            </div>
+            <div class="form-group">
+              <label for="prodObs">Observações Técnicas</label>
+              <textarea id="prodObs" rows="2" placeholder="Ex: Secagem em câmara térmica antiácaro"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary full-width" id="btnSalvar">
+                <span class="material-symbols-outlined">save</span> Salvar Produto
+              </button>
+              <button type="button" class="btn btn-secondary full-width" id="btnCancelar" style="display: none;" onclick="resetarFormulario()">
+                Cancelar Edição
+              </button>
+            </div>
+          </form>
+        </aside>
+
+        <div class="card table-panel">
+          <div class="table-toolbar">
+            <div>
+              <h2>Catálogo de Serviços e Preços</h2>
+              <p class="toolbar-sub">Altere os valores diretamente nos campos ou ative/desative a exibição no site.</p>
+            </div>
+            <div class="toolbar-filters">
+              <select id="filtroCategoria" onchange="renderizarTabelaAdmin()">
+                <option value="todas">Todas as Categorias</option>
+                <option value="Volumosos / Casa">Volumosos / Casa</option>
+                <option value="Cama, Mesa e Banho">Cama, Mesa e Banho</option>
+                <option value="Dia a Dia (Básicas)">Dia a Dia (Básicas)</option>
+                <option value="Alfaiataria e Finas">Alfaiataria e Finas</option>
+                <option value="Inverno e Especiais">Inverno e Especiais</option>
+              </select>
+              <input type="search" id="buscaItem" placeholder="Buscar peça..." oninput="renderizarTabelaAdmin()">
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Item & Categoria</th>
+                  <th>Só Lavar (R$)</th>
+                  <th>Só Passar (R$)</th>
+                  <th>Completo (R$)</th>
+                  <th style="text-align: right;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast-notification">Operação realizada com sucesso!</div>
+
+  <footer>
+    <div class="footer-content">
+      <div>
+        <h3>Lavanderia Alva — Sistema Interno</h3>
+        <p>Gerenciamento de catálogo, precificação e disponibilidade de serviços.</p>
+      </div>
+      <div>
+        <p><strong>Suporte Técnico:</strong></p>
+        <p>ti@alva.com.br</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Alva. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

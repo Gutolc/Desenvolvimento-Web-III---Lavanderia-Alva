@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esteira Kanban de Pedidos | Lavanderia Alva</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/kanban.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <span class="material-symbols-outlined">local_laundry_service</span>
+      Lavanderia <span>Alva</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Ver Site Público</a></li>
+      <li><a href="admin.html">Catálogo & Preços (Admin)</a></li>
+      <li><a href="kanban.html" class="active">Esteira Kanban</a></li>
+      <li>
+        <button type="button" class="btn btn-secondary btn-nav" onclick="sessionStorage.removeItem('alva_admin_token'); window.location.href='admin.html';">
+          <span class="material-symbols-outlined">logout</span> Sair
+        </button>
+      </li>
+    </ul>
+  </header>
+
+  <div class="kanban-header">
+    <div>
+      <h1>Esteira Kanban de Pedidos & Delivery</h1>
+      <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">
+        Mova os pedidos entre as etapas para atualizar o status e disparar avisos por WhatsApp e E-mail ao cliente.
+      </p>
+    </div>
+    <a href="precos.html" class="btn btn-primary btn-nav">
+      <span class="material-symbols-outlined">add_shopping_cart</span> Simular Novo Pedido
+    </a>
+  </div>
+
+  <!-- Banner de Notificação Automática -->
+  <div class="notification-banner" id="notifBanner">
+    <div>
+      <strong id="notifTitulo">Status atualizado!</strong>
+      <div id="notifSubtitulo" style="font-size: var(--text-xs); color: var(--color-primary-light);"></div>
+    </div>
+    <div style="display: flex; gap: var(--space-2);">
+      <a id="notifLinkWhats" href="#" target="_blank" class="btn btn-light" style="padding: 6px 12px; font-size: var(--text-xs);">
+        <span class="material-symbols-outlined">chat</span> Enviar WhatsApp ao Cliente
+      </a>
+      <a id="notifLinkEmail" href="#" class="btn btn-light" style="padding: 6px 12px; font-size: var(--text-xs);">
+        <span class="material-symbols-outlined">mail</span> Enviar E-mail ao Cliente
+      </a>
+    </div>
+  </div>
+
+  <!-- Quadro Kanban com as 5 Etapas do Delivery -->
+  <main class="kanban-board">
+    <div class="kanban-column" data-col="recebido" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'recebido')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">inbox</span> Recebido / Coleta</h3>
+        <span class="col-count" id="count-recebido">0</span>
+      </div>
+      <div id="col-recebido" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+
+    <div class="kanban-column" data-col="andamento" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'andamento')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">local_laundry_service</span> Em Andamento</h3>
+        <span class="col-count" id="count-andamento">0</span>
+      </div>
+      <div id="col-andamento" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+
+    <div class="kanban-column" data-col="pronto" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'pronto')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">iron</span> Pronto & Embalado</h3>
+        <span class="col-count" id="count-pronto">0</span>
+      </div>
+      <div id="col-pronto" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+
+    <div class="kanban-column" data-col="entrega" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'entrega')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">local_shipping</span> Saiu para Entrega</h3>
+        <span class="col-count" id="count-entrega">0</span>
+      </div>
+      <div id="col-entrega" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+
+    <div class="kanban-column" data-col="concluido" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'concluido')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">check_circle</span> Entregue / Concluído</h3>
+        <span class="col-count" id="count-concluido">0</span>
+      </div>
+      <div id="col-concluido" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/kanban.js"></script>
+</body>
+</html>

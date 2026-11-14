@@ -1,0 +1,191 @@
+  .page-header {
+      text-align: center;
+      padding: var(--space-8) 5% var(--space-6);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .page-header .tagline {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--color-primary-dark);
+      background: var(--color-primary-light);
+      padding: var(--space-1) var(--space-3);
+      border-radius: 999px;
+      margin-bottom: var(--space-3);
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 4vw, var(--text-2xl));
+      margin: 0 0 var(--space-3);
+    }
+    .page-header p {
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      margin: 0;
+    }
+
+    /* Grid de Especialidades de Alto Valor */
+    .premium-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-6);
+      max-width: 1100px;
+      margin: 0 auto var(--space-8);
+    }
+    .price-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(3, 105, 161, 0.14);
+    }
+    .price-card.featured {
+      border: 2px solid var(--color-primary);
+    }
+    .price-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .price-header .ico {
+      flex-shrink: 0;
+    }
+    .price-header h3 {
+      margin: 0;
+      font-size: var(--text-lg);
+    }
+    .price-header p {
+      margin: 0;
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+    .price-value-box {
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-3) 0;
+    }
+    .price-prefix {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      display: block;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .price-number {
+      font: 700 var(--text-2xl) var(--font-title);
+      color: var(--color-primary-dark);
+      line-height: 1.1;
+    }
+    .price-number small {
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+    .price-unit {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+    .feature-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      flex-grow: 1;
+    }
+    .feature-bullets li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+    .feature-bullets .material-symbols-outlined {
+      color: var(--color-success);
+      font-size: 20px;
+    }
+
+    /* Container de Tabelas */
+    .tables-section-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+    .table-card {
+      overflow-x: auto;
+    }
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: var(--text-sm);
+    }
+    .custom-table th, .custom-table td {
+      padding: var(--space-3) var(--space-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .custom-table th {
+      font-family: var(--font-title);
+      color: var(--color-text-muted);
+      font-weight: 600;
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      background: var(--color-bg);
+    }
+    .custom-table td.col-val {
+      text-align: right;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+      white-space: nowrap;
+    }
+    .custom-table td.col-desc {
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+    }
+    .table-caption {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+      font: 600 var(--text-lg) var(--font-title);
+      color: var(--color-primary-dark);
+    }
+
+    /* Formulário no CTA */
+    .cta-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .cta-form textarea,
+    .cta-form .full-col {
+      grid-column: 1 / -1;
+    }
+    .cta-form input,
+    .cta-form select,
+    .cta-form textarea {
+      width: 100%;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+    .cta-form .btn {
+      justify-content: center;
+    }
+
+    @media (max-width: 640px) {
+      .cta-form {
+        grid-template-columns: 1fr;
+      }
+    }
