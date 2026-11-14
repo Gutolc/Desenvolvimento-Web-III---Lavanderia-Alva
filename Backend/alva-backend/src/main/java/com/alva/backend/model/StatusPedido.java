@@ -9,5 +9,6 @@ public enum StatusPedido {
     PENDENTE,
     TRIAGEM,
     LAVANDO,
-    PRONTO
+    AGUARDANDO_APROVACAO,
+    PRONTO,
 }

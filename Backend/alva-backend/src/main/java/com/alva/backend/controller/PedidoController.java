@@ -2,15 +2,18 @@ package com.alva.backend.controller;
 
 import com.alva.backend.dto.AtualizarStatusRequest;
 import com.alva.backend.dto.CriarPedidoRequest;
+import com.alva.backend.dto.EditarPecasRequest;
 import com.alva.backend.dto.PedidoResponse;
 import com.alva.backend.model.Pedido;
 import com.alva.backend.model.StatusPedido;
 import com.alva.backend.service.PedidoService;
+import com.alva.backend.service.TriagemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,11 +33,13 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*") // ajustar para o domínio do frontend em produção
 public class PedidoController {
 
-    private final PedidoService pedidoService;
+        private final PedidoService pedidoService;
+    private final TriagemService triagemService;
 
     @Autowired
-    public PedidoController(PedidoService pedidoService) {
+    public PedidoController(PedidoService pedidoService, TriagemService triagemService) {
         this.pedidoService = pedidoService;
+        this.triagemService = triagemService;
     }
 
     @GetMapping
@@ -70,6 +75,15 @@ public class PedidoController {
             @Valid @RequestBody AtualizarStatusRequest request) {
 
         Pedido pedido = pedidoService.atualizarStatus(id, request.getStatus());
+        return ResponseEntity.ok(PedidoResponse.fromEntity(pedido));
+    }
+
+    @PutMapping("/{id}/triagem")
+    public ResponseEntity<PedidoResponse> editarPecas(
+            @PathVariable Long id,
+            @Valid @RequestBody EditarPecasRequest request) {
+
+        Pedido pedido = triagemService.editarPecas(id, request);
         return ResponseEntity.ok(PedidoResponse.fromEntity(pedido));
     }
 
