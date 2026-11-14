@@ -35,6 +35,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/clientes/auth/solicitar-codigo").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/clientes/auth/verificar-codigo").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/webhook/whatsapp").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/webhook/whatsapp").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
