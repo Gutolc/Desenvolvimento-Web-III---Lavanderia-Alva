@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esteira Kanban de Pedidos | Lavanderia Alva</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .kanban-header {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: var(--space-6) 3% var(--space-2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .kanban-header h1 { margin: 0; font-size: var(--text-xl); }
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(260px, 1fr));
+      gap: var(--space-4);
+      padding: var(--space-4) 3% var(--space-8);
+      max-width: 1440px;
+      margin: 0 auto;
+      overflow-x: auto;
+      align-items: start;
+    }
+    .kanban-column {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      min-height: 540px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .kanban-col-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--color-bg);
+      border-left: 4px solid var(--color-primary);
+    }
+    .kanban-col-header h3 {
+      margin: 0;
+      font-size: var(--text-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .col-count {
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    /* Cartão do Pedido no Kanban */
+    .order-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      cursor: grab;
+    }
+    .order-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--text-xs);
+    }
+    .order-code {
+      font-family: var(--font-title);
+      font-weight: 700;
+      color: var(--color-primary-dark);
+      background: var(--color-primary-light);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .order-client {
+      font-weight: 600;
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+    .order-meta {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+    .order-items-pill {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+    }
+    .order-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-1);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--color-border);
+    }
+    .btn-kanban {
+      font-size: var(--text-xs);
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+    }
+    .btn-kanban:hover { background: var(--color-primary-light); }
+    .btn-kanban.notify {
+      background: var(--color-primary);
+      color: var(--color-surface);
+      border-color: var(--color-primary);
+    }
+
+    /* Barra de Disparo de Notificação ao Cliente */
+    .notification-banner {
+      max-width: 1340px;
+      margin: 0 auto var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      background: var(--color-primary-dark);
+      color: var(--color-surface);
+      border-radius: var(--radius-md);
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+    .notification-banner.show { display: flex; }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <span class="material-symbols-outlined">local_laundry_service</span>
+      Lavanderia <span>Alva</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Ver Site Público</a></li>
+      <li><a href="admin.html">Catálogo & Preços (Admin)</a></li>
+      <li><a href="kanban.html" class="active">Esteira Kanban</a></li>
+      <li>
+        <button type="button" class="btn btn-secondary btn-nav" onclick="sessionStorage.removeItem('alva_admin_autenticado'); window.location.href='admin.html';">
+          <span class="material-symbols-outlined">logout</span> Sair
+        </button>
+      </li>
+    </ul>
+  </header>
+
+  <div class="kanban-header">
+    <div>
+      <h1>Esteira Kanban de Pedidos & Delivery</h1>
+      <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">
+        Mova os pedidos entre as etapas para atualizar o status e disparar avisos por WhatsApp e E-mail ao cliente.
+      </p>
+    </div>
+    <a href="precos.html" class="btn btn-primary btn-nav">
+      <span class="material-symbols-outlined">add_shopping_cart</span> Simular Novo Pedido
+    </a>
+  </div>
+
+  <!-- Banner de Notificação Automática (aparece sempre que um card muda de status) -->
+  <div class="notification-banner" id="notifBanner">
+    <div>
+      <strong id="notifTitulo">Status atualizado!</strong>
+      <div id="notifSubtitulo" style="font-size: var(--text-xs); color: var(--color-primary-light);"></div>
+    </div>
+    <div style="display: flex; gap: var(--space-2);">
+      <a id="notifLinkWhats" href="#" target="_blank" class="btn btn-light" style="padding: 6px 12px; font-size: var(--text-xs);">
+        <span class="material-symbols-outlined">chat</span> Enviar WhatsApp ao Cliente
+      </a>
+      <a id="notifLinkEmail" href="#" class="btn btn-light" style="padding: 6px 12px; font-size: var(--text-xs);">
+        <span class="material-symbols-outlined">mail</span> Enviar E-mail ao Cliente
+      </a>
+    </div>
+  </div>
+
+  <!-- Quadro Kanban com as 5 Etapas do Delivery -->
+  <main class="kanban-board">
+    <div class="kanban-column" data-col="recebido" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'recebido')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">inbox</span> Recebido / Coleta</h3>
+        <span class="col-count" id="count-recebido">0</span>
+      </div>
+      <div id="col-recebido" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+
+    <div class="kanban-column" data-col="andamento" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'andamento')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">local_laundry_service</span> Em Andamento</h3>
+        <span class="col-count" id="count-andamento">0</span>
+      </div>
+      <div id="col-andamento" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+
+    <div class="kanban-column" data-col="pronto" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'pronto')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">iron</span> Pronto & Embalado</h3>
+        <span class="col-count" id="count-pronto">0</span>
+      </div>
+      <div id="col-pronto" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+
+    <div class="kanban-column" data-col="entrega" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'entrega')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">local_shipping</span> Saiu para Entrega</h3>
+        <span class="col-count" id="count-entrega">0</span>
+      </div>
+      <div id="col-entrega" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+
+    <div class="kanban-column" data-col="concluido" ondragover="event.preventDefault()" ondrop="soltarCard(event, 'concluido')">
+      <div class="kanban-col-header">
+        <h3><span class="material-symbols-outlined">check_circle</span> Entregue / Concluído</h3>
+        <span class="col-count" id="count-concluido">0</span>
+      </div>
+      <div id="col-concluido" style="display:flex; flex-direction:column; gap: var(--space-3);"></div>
+    </div>
+  </main>
+
+  <script>
+    const AUTH_KEY = 'alva_admin_autenticado';
+    if (sessionStorage.getItem(AUTH_KEY) !== 'true') {
+      alert('Acesso restrito ao administrador. Faça login no painel administrativo para acessar a visão geral de pedidos.');
+      window.location.href = 'admin.html';
+    }
+    const ORDERS_STORAGE_KEY = 'alva_pedidos_kanban';
+    const ORDEM_COLUNAS = ['recebido', 'andamento', 'pronto', 'entrega', 'concluido'];
+
+    const INFO_STATUS = {
+      recebido: {
+        titulo: 'Recebido / Coleta Agendada',
+        msg: 'Recebemos seu pedido e nossa equipe já programou a coleta no seu endereço.'
+      },
+      andamento: {
+        titulo: 'Em Andamento (Lavagem & Passadoria)',
+        msg: 'Suas peças já estão em processo de higienização e cuidado técnico em nossa unidade.'
+      },
+      pronto: {
+        titulo: 'Pronto & Embalado',
+        msg: 'Suas roupas já estão limpas, cheirosas e embaladas aguardando o roteiro de entrega!'
+      },
+      entrega: {
+        titulo: 'Saiu para Entrega',
+        msg: 'Nosso motorista acabou de sair com o seu pacote! Em breve estaremos no seu endereço.'
+      },
+      concluido: {
+        titulo: 'Pedido Entregue',
+        msg: 'Entrega concluída! Agradecemos por confiar suas peças à Lavanderia Alva.'
+      }
+    };
+
+    // Pedidos iniciais de demonstração caso ainda não haja nenhum salvo
+    const pedidosExemplo = [
+      {
+        codigo: 'ALV-8421',
+        criadoEm: 'Hoje, 09:15',
+        status: 'andamento',
+        pagamento: 'PIX Instantâneo',
+        total: 110.00,
+        cliente: {
+          nome: 'Carlos Eduardo Rocha',
+          whatsapp: '11999998888',
+          email: 'carlos@email.com',
+          coleta: 'Hoje - Manhã',
+          endereco: 'Av. Prof. Lucas de Assunção, 278 - Butantã'
+        },
+        itens: [
+          { nome: 'Edredom Casal / Queen', modalidade: 'Só Lavar', quantidade: 2, preco: 55.00 }
+        ]
+      },
+      {
+        codigo: 'ALV-7904',
+        criadoEm: 'Hoje, 10:40',
+        status: 'entrega',
+        pagamento: 'Cartão de Crédito',
+        total: 74.50,
+        cliente: {
+          nome: 'Fernanda Lima',
+          whatsapp: '11988887777',
+          email: 'fernanda@email.com',
+          coleta: 'Ontem - Tarde',
+          endereco: 'Rua Alvarenga, 1020 - Butantã'
+        },
+        itens: [
+          { nome: 'Terno Completo (2 peças)', modalidade: 'Lavar + Passar', quantidade: 1, preco: 56.00 },
+          { nome: 'Camisa Social Masculina/Fem.', modalidade: 'Lavar + Passar', quantidade: 1, preco: 18.50 }
+        ]
+      }
+    ];
+
+    function obterPedidosKanban() {
+      const salvos = localStorage.getItem(ORDERS_STORAGE_KEY);
+      if (salvos) return JSON.parse(salvos);
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(pedidosExemplo));
+      return pedidosExemplo;
+    }
+
+    function salvarPedidosKanban(lista) {
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(lista));
+      renderizarQuadroKanban();
+    }
+
+    const API_PEDIDOS_URL = window.location.protocol === 'file:' ? 'http://localhost:3000/api/pedidos' : '/api/pedidos';
+
+    async function persistirStatusNoMongoDB(pedido) {
+      try {
+        const res = await fetch(`${API_PEDIDOS_URL}/${encodeURIComponent(pedido.codigo)}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: pedido.status })
+        });
+        // Caso seja um pedido de demonstração que ainda não estava no MongoDB, grava-o completo agora
+        if (res.status === 404) {
+          await fetch(API_PEDIDOS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pedido)
+          });
+        }
+      } catch (e) {
+        console.warn('Operando em cache local (servidor offline):', e);
+      }
+    }
+
+    async function moverStatusPedido(codigo, direcao) {
+      const pedidos = obterPedidosKanban();
+      const pedido = pedidos.find(p => p.codigo === codigo);
+      if (!pedido) return;
+
+      const idxAtual = ORDEM_COLUNAS.indexOf(pedido.status);
+      const novoIdx = idxAtual + direcao;
+      if (novoIdx < 0 || novoIdx >= ORDEM_COLUNAS.length) return;
+
+      pedido.status = ORDEM_COLUNAS[novoIdx];
+      salvarPedidosKanban(pedidos);
+      prepararDisparoNotificacao(pedido);
+
+      await persistirStatusNoMongoDB(pedido);
+    }
+
+    // Exclusivo Admin: Cancelamento de pedido mediante solicitação do cliente
+    async function cancelarPedidoAdmin(codigo) {
+      if (confirm(`Deseja realmente CANCELAR o pedido #${codigo} a pedido do cliente? Ele será removido da esteira ativa.`)) {
+        let pedidos = obterPedidosKanban();
+        pedidos = pedidos.filter(p => p.codigo !== codigo);
+        salvarPedidosKanban(pedidos);
+
+        try {
+          await fetch(`${API_PEDIDOS_URL}/${encodeURIComponent(codigo)}`, {
+            method: 'DELETE'
+          });
+        } catch (e) {}
+
+        alert(`Pedido #${codigo} cancelado pelo administrador.`);
+      }
+    }
+
+    async function sincronizarPedidosMongoDB() {
+      try {
+        const res = await fetch(API_PEDIDOS_URL);
+        if (res.ok) {
+          const dadosBanco = await res.json();
+          if (Array.isArray(dadosBanco) && dadosBanco.length > 0) {
+            localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(dadosBanco));
+            renderizarQuadroKanban();
+          } else {
+            // Se o banco ainda não tem pedidos, envia os pedidos atuais do localStorage para o MongoDB
+            const locais = obterPedidosKanban();
+            for (const p of locais) {
+              await fetch(API_PEDIDOS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(p)
+              });
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    // Drag and Drop (Agora também salva imediatamente no MongoDB Atlas!)
+    let codigoArrastado = null;
+    function iniciarArraste(codigo) { codigoArrastado = codigo; }
+    async function soltarCard(event, novaColuna) {
+      event.preventDefault();
+      if (!codigoArrastado) return;
+      const pedidos = obterPedidosKanban();
+      const pedido = pedidos.find(p => p.codigo === codigoArrastado);
+      codigoArrastado = null;
+      if (pedido && pedido.status !== novaColuna) {
+        pedido.status = novaColuna;
+        salvarPedidosKanban(pedidos);
+        prepararDisparoNotificacao(pedido);
+        await persistirStatusNoMongoDB(pedido);
+      }
+    }
+
+    function prepararDisparoNotificacao(pedido) {
+      const info = INFO_STATUS[pedido.status];
+      const fone = pedido.cliente.whatsapp.startsWith('55')
+        ? pedido.cliente.whatsapp
+        : '55' + pedido.cliente.whatsapp;
+
+      const textoMensagem = `Olá ${pedido.cliente.nome}! Atualização do seu pedido *#${pedido.codigo}* na Lavanderia Alva:\n\n` +
+        `📌 *Novo Status:* ${info.titulo}\n` +
+        `${info.msg}\n\n` +
+        `*Endereço cadastrado:* ${pedido.cliente.endereco}`;
+
+      document.getElementById('notifTitulo').textContent =
+        `Pedido #${pedido.codigo} (${pedido.cliente.nome}) movido para "${info.titulo}"`;
+      document.getElementById('notifSubtitulo').textContent =
+        `Dispare o aviso para WhatsApp (${pedido.cliente.whatsapp}) e E-mail (${pedido.cliente.email}):`;
+
+      document.getElementById('notifLinkWhats').href =
+        `https://wa.me/${fone}?text=${encodeURIComponent(textoMensagem)}`;
+      document.getElementById('notifLinkEmail').href =
+        `mailto:${pedido.cliente.email}?subject=${encodeURIComponent('Atualização do Pedido #' + pedido.codigo + ' - ' + info.titulo)}&body=${encodeURIComponent(textoMensagem)}`;
+
+      document.getElementById('notifBanner').classList.add('show');
+    }
+
+    function renderizarQuadroKanban() {
+      const pedidos = obterPedidosKanban();
+
+      ORDEM_COLUNAS.forEach(col => {
+        const container = document.getElementById(`col-${col}`);
+        const contador = document.getElementById(`count-${col}`);
+        const daColuna = pedidos.filter(p => p.status === col);
+
+        contador.textContent = daColuna.length;
+        container.innerHTML = daColuna.map(p => {
+          const idx = ORDEM_COLUNAS.indexOf(p.status);
+          const resumoPecas = p.itens.map(i => `${i.quantidade}x ${i.nome}`).join(', ');
+          return `
+            <article class="order-card" draggable="true" ondragstart="iniciarArraste('${p.codigo}')">
+              <div class="order-card-top">
+                <span class="order-code">#${p.codigo}</span>
+                <span>${p.criadoEm}</span>
+              </div>
+              <div class="order-client">${p.cliente.nome}</div>
+              <div class="order-meta">
+                📍 ${p.cliente.endereco}<br>
+                📱 ${p.cliente.whatsapp} | ✉️ ${p.cliente.email}
+              </div>
+              <div class="order-items-pill">
+                <strong>Peças:</strong> ${resumoPecas}<br>
+                <strong>Total:</strong> R$ ${Number(p.total).toFixed(2).replace('.', ',')} (${p.pagamento})
+              </div>
+              <div class="order-actions" style="flex-wrap: wrap; gap: 4px;">
+                <button type="button" class="btn-kanban" ${idx === 0 ? 'disabled' : ''} onclick="moverStatusPedido('${p.codigo}', -1)">
+                  ◀ Voltar
+                </button>
+                <button type="button" class="btn-kanban notify" onclick='prepararDisparoNotificacao(${JSON.stringify(p)})' title="Notificar cliente no WhatsApp/E-mail">
+                  <span class="material-symbols-outlined" style="font-size:16px; color:inherit;">notifications_active</span> Avisar
+                </button>
+                <button type="button" class="btn-kanban" ${idx === ORDEM_COLUNAS.length - 1 ? 'disabled' : ''} onclick="moverStatusPedido('${p.codigo}', 1)">
+                  Avançar ▶
+                </button>
+                <button type="button" class="btn-kanban" style="background: #FEE2E2; color: #DC2626; border-color: #FCA5A5; width: 100%; justify-content: center; margin-top: 4px;" onclick="cancelarPedidoAdmin('${p.codigo}')">
+                  <span class="material-symbols-outlined" style="font-size:16px; color:inherit;">cancel</span> Cancelar Pedido (Solicitação do Cliente)
+                </button>
+              </div>
+            </article>
+          `;
+        }).join('');
+      });
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === ORDERS_STORAGE_KEY) renderizarQuadroKanban();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => { renderizarQuadroKanban(); sincronizarPedidosMongoDB(); });
+  </script>
+</body>
+</html>

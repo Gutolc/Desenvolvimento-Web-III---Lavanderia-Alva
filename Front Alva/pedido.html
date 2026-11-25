@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Pedido Online | Lavanderia Alva</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .checkout-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-6) 5%;
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .checkout-step-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-lg);
+      margin: 0 0 var(--space-4);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-primary-dark);
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+    .full-col { grid-column: 1 / -1; }
+    .field-group { display: flex; flex-direction: column; gap: var(--space-1); }
+    .field-group label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; color: var(--color-text-muted); }
+    .field-group input, .field-group select, .field-group textarea { width: 100%; }
+
+    /* Opções de Pagamento */
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .pay-option {
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      text-align: center;
+      cursor: pointer;
+      background: var(--color-surface);
+      transition: all 0.2s;
+    }
+    .pay-option.active {
+      border-color: var(--color-primary);
+      background: var(--color-bg);
+    }
+    .pay-option strong { display: block; font-size: var(--text-sm); margin-top: var(--space-1); }
+    .pay-simulation-box {
+      background: var(--color-bg);
+      border: 1px dashed var(--color-primary);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-bottom: var(--space-6);
+      text-align: center;
+    }
+
+    /* Resumo Lateral */
+    .summary-list {
+      list-style: none; padding: 0; margin: 0 0 var(--space-4);
+      display: flex; flex-direction: column; gap: var(--space-2);
+    }
+    .summary-item {
+      display: flex; justify-content: space-between; font-size: var(--text-sm);
+      padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-border);
+    }
+    .summary-total {
+      display: flex; justify-content: space-between;
+      font: 700 var(--text-xl) var(--font-title);
+      color: var(--color-primary-dark);
+      padding-top: var(--space-2);
+    }
+
+    /* Tela de Sucesso do Pedido */
+    .order-success-card {
+      max-width: 680px; margin: var(--space-8) auto; text-align: center; display: none;
+    }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: var(--space-1);
+      background: var(--color-primary-light); color: var(--color-primary-dark);
+      padding: var(--space-1) var(--space-3); border-radius: 999px; font-weight: 700; font-size: var(--text-xs);
+    }
+    @media (max-width: 820px) {
+      .checkout-container, .form-grid-2, .payment-methods { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <span class="material-symbols-outlined">local_laundry_service</span>
+      Lavanderia <span>Alva</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="precos.html">Adicionar Mais Peças</a></li>
+      <li><a href="meu-pedido.html">Acompanhar Pedido</a></li>
+    </ul>
+  </header>
+
+  <!-- Formulário de Checkout Sem Login -->
+  <main class="checkout-container" id="checkoutMain">
+    <form class="card" id="orderCheckoutForm">
+      
+      <!-- 1. Dados Pessoais -->
+      <h2 class="checkout-step-title">
+        <span class="material-symbols-outlined">person</span>
+        1. Seus Dados para Contato e Notificações
+      </h2>
+      <div class="form-grid-2">
+        <div class="field-group full-col">
+          <label for="cliNome">Nome Completo *</label>
+          <input type="text" id="cliNome" placeholder="Ex: Mariana Costa" required>
+        </div>
+        <div class="field-group">
+          <label for="cliWhatsapp">WhatsApp (com DDD) *</label>
+          <input type="tel" id="cliWhatsapp" placeholder="Ex: 11998887766" required>
+        </div>
+        <div class="field-group">
+          <label for="cliEmail">E-mail para Comprovante *</label>
+          <input type="email" id="cliEmail" placeholder="mariana@email.com" required>
+        </div>
+        <div class="field-group">
+          <label for="cliCpf">CPF (para Nota Fiscal) *</label>
+          <input type="text" id="cliCpf" placeholder="000.000.000-00" required>
+        </div>
+        <div class="field-group">
+          <label for="cliDataColeta">Data/Período Preferido de Coleta *</label>
+          <select id="cliDataColeta" required>
+            <option value="Hoje - Tarde (13h às 18h)">Hoje - Tarde (13h às 18h)</option>
+            <option value="Amanhã - Manhã (08h às 12h)">Amanhã - Manhã (08h às 12h)</option>
+            <option value="Amanhã - Tarde (13h às 18h)">Amanhã - Tarde (13h às 18h)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 2. Endereço de Coleta e Entrega -->
+      <h2 class="checkout-step-title">
+        <span class="material-symbols-outlined">location_on</span>
+        2. Endereço de Coleta e Entrega
+      </h2>
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label for="cliCep">CEP *</label>
+          <input type="text" id="cliCep" placeholder="05591-060" required>
+        </div>
+        <div class="field-group">
+          <label for="cliBairro">Bairro *</label>
+          <input type="text" id="cliBairro" placeholder="Butantã" required>
+        </div>
+        <div class="field-group full-col">
+          <label for="cliRua">Rua / Avenida e Número *</label>
+          <input type="text" id="cliRua" placeholder="Av. Prof. Lucas de Assunção, 278" required>
+        </div>
+        <div class="field-group full-col">
+          <label for="cliComp">Complemento / Ponto de Referência</label>
+          <input type="text" id="cliComp" placeholder="Apto 42, Bloco B - Deixar na portaria">
+        </div>
+      </div>
+
+      <!-- 3. Simulação de Pagamento -->
+      <h2 class="checkout-step-title">
+        <span class="material-symbols-outlined">payments</span>
+        3. Pagamento Online (Simulação)
+      </h2>
+      <input type="hidden" id="metodoPagamento" value="PIX Instantâneo">
+      <div class="payment-methods">
+        <div class="pay-option active" onclick="selecionarPagamento('PIX Instantâneo', this)">
+          <span class="material-symbols-outlined">qr_code_2</span>
+          <strong>PIX Instantâneo</strong>
+        </div>
+        <div class="pay-option" onclick="selecionarPagamento('Cartão de Crédito', this)">
+          <span class="material-symbols-outlined">credit_card</span>
+          <strong>Cartão Online</strong>
+        </div>
+        <div class="pay-option" onclick="selecionarPagamento('Na Entrega (Maquininha)', this)">
+          <span class="material-symbols-outlined">local_shipping</span>
+          <strong>Pagar na Entrega</strong>
+        </div>
+      </div>
+
+      <div class="pay-simulation-box" id="boxSimulacaoPagamento">
+        <span class="material-symbols-outlined" style="font-size: 48px;">qr_code_2</span>
+        <p style="margin: var(--space-2) 0 0; font-size: var(--text-sm);">
+          <strong>Simulação PIX Ativa:</strong> Ao clicar em confirmar abaixo, o pagamento será aprovado automaticamente e seu pedido entrará na esteira de lavagem.
+        </p>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: var(--text-lg);">
+        <span class="material-symbols-outlined">check_circle</span>
+        Confirmar Pagamento e Enviar Pedido
+      </button>
+    </form>
+
+    <!-- Coluna Lateral: Resumo dos Serviços Selecionados -->
+    <aside class="card">
+      <h3 class="checkout-step-title">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Resumo do Pedido
+      </h3>
+      <ul class="summary-list" id="checkoutSummaryList"></ul>
+      <div class="summary-total">
+        <span>Total:</span>
+        <span id="checkoutTotalValue">R$ 0,00</span>
+      </div>
+      <p style="font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-3);">
+        * Frete grátis aplicado. Você receberá atualizações do status no seu WhatsApp e E-mail cadastrados.
+      </p>
+    </aside>
+  </main>
+
+  <!-- Card de Confirmação Exibido Após o Pagamento -->
+  <section class="card order-success-card" id="orderSuccessCard">
+    <span class="material-symbols-outlined" style="font-size: 56px; color: var(--color-success);">verified</span>
+    <h2>Pedido Confirmado e Pago!</h2>
+    <p>Código do seu pedido: <strong id="sucessoCodigoPedido">#ALV-0000</strong></p>
+    <div style="margin: var(--space-4) 0;">
+      <span class="status-pill"><span class="material-symbols-outlined">sync</span> Status na Esteira: Recebido / Coleta Agendada</span>
+    </div>
+    <p style="font-size: var(--text-sm); color: var(--color-text-muted);" id="sucessoResumoNotificacao"></p>
+
+    <div class="hero-buttons" style="justify-content: center; margin-top: var(--space-6);">
+      <a id="btnNotificarWhatsAppCliente" href="#" target="_blank" class="btn btn-primary">
+        <span class="material-symbols-outlined">chat</span> Receber Comprovante no WhatsApp
+      </a>
+      <a id="btnNotificarEmailCliente" href="#" class="btn btn-secondary">
+        <span class="material-symbols-outlined">mail</span> Enviar Cópia por E-mail
+      </a>
+      <a id="btnRastrearCliente" href="meu-pedido.html" class="btn btn-secondary">
+        <span class="material-symbols-outlined">track_changes</span> Acompanhar Meu Pedido
+      </a>
+    </div>
+  </section>
+
+  <script src="carrinho.js"></script>
+  <script>
+    const ORDERS_STORAGE_KEY = 'alva_pedidos_kanban';
+
+    function selecionarPagamento(metodo, elemento) {
+      document.getElementById('metodoPagamento').value = metodo;
+      document.querySelectorAll('.pay-option').forEach(el => el.classList.remove('active'));
+      elemento.classList.add('active');
+
+      const box = document.getElementById('boxSimulacaoPagamento');
+      if (metodo === 'PIX Instantâneo') {
+        box.innerHTML = `<span class="material-symbols-outlined" style="font-size: 48px;">qr_code_2</span>
+          <p style="margin: var(--space-2) 0 0; font-size: var(--text-sm);"><strong>Simulação PIX:</strong> Aprovação imediata ao finalizar.</p>`;
+      } else if (metodo === 'Cartão de Crédito') {
+        box.innerHTML = `<input type="text" placeholder="Número do Cartão Simulado (4444 5555 6666 7777)" style="width:100%; margin-bottom: 8px;" value="4532 •••• •••• 8891">
+          <small style="color: var(--color-text-muted);">Transação simulada aprovada em 1x sem juros.</small>`;
+      } else {
+        box.innerHTML = `<p style="margin:0; font-size: var(--text-sm);">O pagamento será realizado na entrega das suas roupas limpas.</p>`;
+      }
+    }
+
+    function renderizarResumoCheckout() {
+      const carrinho = obterCarrinho();
+      const lista = document.getElementById('checkoutSummaryList');
+      const totalEl = document.getElementById('checkoutTotalValue');
+
+      if (carrinho.length === 0) {
+        // Caso o usuário abra pedido.html vazio, insere 1 item de demonstração para facilitar o teste
+        lista.innerHTML = `<li>Seu cesto está vazio. <a href="precos.html">Clique aqui para escolher os serviços</a>.</li>`;
+        totalEl.textContent = 'R$ 0,00';
+        return;
+      }
+
+      let total = 0;
+      lista.innerHTML = carrinho.map(item => {
+        const sub = item.preco * item.quantidade;
+        total += sub;
+        return `
+          <li class="summary-item">
+            <span><strong>${item.quantidade}x</strong> ${item.nome} (${item.modalidade})</span>
+            <strong>${formatarBRL(sub)}</strong>
+          </li>
+        `;
+      }).join('');
+
+      totalEl.textContent = formatarBRL(total);
+    }
+document.getElementById('orderCheckoutForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const carrinho = obterCarrinho();
+      if (carrinho.length === 0) {
+        alert('Adicione pelo menos 1 serviço na página de Preços antes de finalizar o pedido.');
+        window.location.href = 'precos.html';
+        return;
+      }
+
+      const codigo = 'ALV-' + Math.floor(1000 + Math.random() * 9000);
+      const total = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
+
+      const novoPedido = {
+        codigo,
+        criadoEm: new Date().toLocaleString('pt-BR'),
+        status: 'recebido',
+        pagamento: document.getElementById('metodoPagamento').value,
+        pago: true,
+        total,
+        cliente: {
+          nome: document.getElementById('cliNome').value.trim(),
+          whatsapp: document.getElementById('cliWhatsapp').value.replace(/\D/g, ''),
+          email: document.getElementById('cliEmail').value.trim(),
+          cpf: document.getElementById('cliCpf').value.trim(),
+          coleta: document.getElementById('cliDataColeta').value,
+          endereco: `${document.getElementById('cliRua').value.trim()}, ${document.getElementById('cliBairro').value.trim()} (CEP: ${document.getElementById('cliCep').value.trim()}) ${document.getElementById('cliComp').value.trim()}`
+        },
+        itens: carrinho
+      };
+
+      // 1. Grava de forma síncrona/aguardada (await) no Back-end Node.js + MongoDB Atlas
+      try {
+        const apiPedidosUrl = window.location.protocol === 'file:' ? 'http://localhost:3000/api/pedidos' : '/api/pedidos';
+        const resposta = await fetch(apiPedidosUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(novoPedido)
+        });
+        const resultado = await resposta.json();
+        if (!resposta.ok) {
+          console.error('Erro retornado pela API:', resultado);
+          alert('Aviso do banco de dados: ' + (resultado.erro || 'Falha ao salvar no MongoDB'));
+        } else {
+          console.log('✅ Cliente e Pedido salvos no MongoDB Atlas:', resultado);
+        }
+      } catch (erroRede) {
+        console.error('Erro de conexão com o backend:', erroRede);
+      }
+
+      // 2. Salva também no cache local e limpa o cesto
+      const pedidosSalvos = JSON.parse(localStorage.getItem(ORDERS_STORAGE_KEY) || '[]');
+      pedidosSalvos.unshift(novoPedido);
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(pedidosSalvos));
+      limparCarrinhoTotal();
+
+      // 3. Prepara os links de notificação (WhatsApp + E-mail)
+      const resumoItens = novoPedido.itens.map(i => `${i.quantidade}x ${i.nome} (${i.modalidade})`).join(', ');
+      const msgTexto = `Olá ${novoPedido.cliente.nome}! A Lavanderia Alva recebeu seu pedido *#${novoPedido.codigo}*.\n\n` +
+        `*Status atual:* Recebido / Coleta Agendada (${novoPedido.cliente.coleta})\n` +
+        `*Serviços:* ${resumoItens}\n` +
+        `*Total:* ${formatarBRL(novoPedido.total)} (${novoPedido.pagamento})\n` +
+        `*Endereço:* ${novoPedido.cliente.endereco}\n\n` +
+        `Avisaremos por aqui assim que suas peças entrarem em lavagem e quando saírem para entrega!`;
+
+      const foneLimpo = novoPedido.cliente.whatsapp.startsWith('55')
+        ? novoPedido.cliente.whatsapp
+        : '55' + novoPedido.cliente.whatsapp;
+
+      document.getElementById('sucessoCodigoPedido').textContent = '#' + novoPedido.codigo;
+      document.getElementById('sucessoResumoNotificacao').textContent =
+        `Notificações configuradas para o WhatsApp (${novoPedido.cliente.whatsapp}) e E-mail (${novoPedido.cliente.email}).`;
+
+      document.getElementById('btnNotificarWhatsAppCliente').href =
+        `https://wa.me/${foneLimpo}?text=${encodeURIComponent(msgTexto)}`;
+      document.getElementById('btnNotificarEmailCliente').href =
+        `mailto:${novoPedido.cliente.email}?subject=${encodeURIComponent('Pedido #' + novoPedido.codigo + ' Confirmado - Lavanderia Alva')}&body=${encodeURIComponent(msgTexto)}`;
+
+      document.getElementById('btnRastrearCliente').href = 'meu-pedido.html?codigo=' + novoPedido.codigo;
+      document.getElementById('checkoutMain').style.display = 'none';
+      document.getElementById('orderSuccessCard').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.addEventListener('DOMContentLoaded', renderizarResumoCheckout);
+  </script>
+</body>
+</html>
