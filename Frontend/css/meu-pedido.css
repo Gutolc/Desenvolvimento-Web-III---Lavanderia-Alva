@@ -1,0 +1,70 @@
+.track-wrapper {
+  max-width: 720px;
+  margin: var(--space-8) auto;
+  padding: 0 5%;
+  min-height: calc(100vh - 280px);
+}
+.track-search-box {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+.track-search-box input {
+  flex: 1;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.timeline {
+  position: relative;
+  padding-left: 38px;
+  margin: var(--space-6) 0 var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  background: var(--color-border);
+}
+.timeline-step {
+  position: relative;
+  padding: var(--space-2) 0;
+}
+.timeline-dot {
+  position: absolute;
+  left: -38px;
+  top: 4px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 3px solid var(--color-border);
+  display: grid;
+  place-items: center;
+  color: var(--color-text-muted);
+}
+.timeline-step.active .timeline-dot {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+.timeline-step.active .timeline-dot .material-symbols-outlined {
+  color: var(--color-surface);
+}
+.timeline-step.current .timeline-dot {
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 4px var(--color-primary-light);
+}
+.timeline-step strong { display: block; font-size: var(--text-base); }
+.timeline-step p { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
+.recent-codes {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: calc(-1 * var(--space-4));
+  margin-bottom: var(--space-4);
+}
