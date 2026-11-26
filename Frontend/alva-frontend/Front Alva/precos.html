@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabela de Preços Completa | Lavanderia Alva</title>
+
+  <!-- Google Fonts: Poppins e Inter (tokens.css) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <!-- Folhas de estilo da aplicação -->
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .page-header {
+      text-align: center;
+      padding: var(--space-8) 5% var(--space-6);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .page-header .tagline {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--color-primary-dark);
+      background: var(--color-primary-light);
+      padding: var(--space-1) var(--space-3);
+      border-radius: 999px;
+      margin-bottom: var(--space-3);
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 4vw, var(--text-2xl));
+      margin: 0 0 var(--space-3);
+    }
+    .page-header p {
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      margin: 0;
+    }
+
+    /* Grid de Especialidades de Alto Valor */
+    .premium-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-6);
+      max-width: 1100px;
+      margin: 0 auto var(--space-8);
+    }
+    .price-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(3, 105, 161, 0.14);
+    }
+    .price-card.featured {
+      border: 2px solid var(--color-primary);
+    }
+    .price-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .price-header .ico {
+      flex-shrink: 0;
+    }
+    .price-header h3 {
+      margin: 0;
+      font-size: var(--text-lg);
+    }
+    .price-header p {
+      margin: 0;
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+    .price-value-box {
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-3) 0;
+    }
+    .price-prefix {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      display: block;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .price-number {
+      font: 700 var(--text-2xl) var(--font-title);
+      color: var(--color-primary-dark);
+      line-height: 1.1;
+    }
+    .price-number small {
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+    .price-unit {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+    .feature-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      flex-grow: 1;
+    }
+    .feature-bullets li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+    }
+    .feature-bullets .material-symbols-outlined {
+      color: var(--color-success);
+      font-size: 20px;
+    }
+
+    /* Container de Tabelas */
+    .tables-section-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+    .table-card {
+      overflow-x: auto;
+    }
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: var(--text-sm);
+    }
+    .custom-table th, .custom-table td {
+      padding: var(--space-3) var(--space-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .custom-table th {
+      font-family: var(--font-title);
+      color: var(--color-text-muted);
+      font-weight: 600;
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      background: var(--color-bg);
+    }
+    .custom-table td.col-val {
+      text-align: right;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+      white-space: nowrap;
+    }
+    .custom-table td.col-desc {
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+    }
+    .table-caption {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+      font: 600 var(--text-lg) var(--font-title);
+      color: var(--color-primary-dark);
+    }
+
+    /* Formulário no CTA */
+    .cta-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .cta-form textarea,
+    .cta-form .full-col {
+      grid-column: 1 / -1;
+    }
+    .cta-form input,
+    .cta-form select,
+    .cta-form textarea {
+      width: 100%;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+    .cta-form .btn {
+      justify-content: center;
+    }
+
+    @media (max-width: 640px) {
+      .cta-form {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <span class="material-symbols-outlined">local_laundry_service</span>
+      Lavanderia <span>Alva</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="#especialidades">Especialidades</a></li>
+      <li><a href="#tabela-completa">Tabela de Preços</a></li>
+      <li><a href="#orcamento" class="btn btn-primary btn-nav">Pedir Coleta</a></li>
+    </ul>
+  </header>
+
+  <!-- Cabeçalho da Página -->
+  <div class="page-header">
+    <span class="tagline">Tabela Oficial de Serviços</span>
+    <h1>Preços Transparentes & Cuidado Especializado</h1>
+    <p>Tratamento com secagem em câmara térmica para peças pesadas, além de opções avulsas de lavagem e passadoria para o seu dia a dia.</p>
+  </div>
+
+  <!-- Especialidades da Casa (Volumosos / Alto Valor Agregado) -->
+  <section id="especialidades">
+    <h2>Especialidades de Alto Valor</h2>
+    <p class="section-desc">Itens volumosos tratados com equipamentos de grande porte, secagem em câmara térmica e higienização profunda.</p>
+
+    <div class="premium-grid">
+      
+      <!-- Edredons -->
+      <article class="card price-card featured">
+        <div class="badge-popular">Mais Pedido</div>
+        <div class="price-header">
+          <div class="ico">
+            <span class="material-symbols-outlined">bed</span>
+          </div>
+          <div>
+            <h3>Edredons & Duvets</h3>
+            <p>Solteiro, Casal, Queen, King e Plumas</p>
+          </div>
+        </div>
+
+        <div class="price-value-box">
+          <span class="price-prefix">Lavagem completa a partir de</span>
+          <div class="price-number"><small>R$</small> 45,00</div>
+          <span class="price-unit">por unidade (secagem térmica inclusa)</span>
+        </div>
+
+        <ul class="feature-bullets">
+          <li><span class="material-symbols-outlined">check_circle</span> Secagem em câmara térmica antiácaro</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Enchimento uniforme sem compactação</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Opção para plumas com processo suave</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Embalado e higienizado com lacre</li>
+        </ul>
+
+        <a href="#orcamento" class="btn btn-primary">Agendar Retirada</a>
+      </article>
+
+      <!-- Tapetes -->
+      <article class="card price-card">
+        <div class="price-header">
+          <div class="ico">
+            <span class="material-symbols-outlined">texture</span>
+          </div>
+          <div>
+            <h3>Tapetes & Passadeiras</h3>
+            <p>Sintético, Shaggy (Pelo Alto) e Persa</p>
+          </div>
+        </div>
+
+        <div class="price-value-box">
+          <span class="price-prefix">Lavagem técnica a partir de</span>
+          <div class="price-number"><small>R$</small> 38,00</div>
+          <span class="price-unit">por metro quadrado (m²)</span>
+        </div>
+
+        <ul class="feature-bullets">
+          <li><span class="material-symbols-outlined">check_circle</span> Extração profunda de sujidades e ácaros</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Secagem suspensa sem deformar a trama</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Limpeza manual com pH neutro para artesanais</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Remoção intensiva de odores</li>
+        </ul>
+
+        <a href="#orcamento" class="btn btn-secondary">Solicitar Medição</a>
+      </article>
+
+      <!-- Cobertores e Mantas -->
+      <article class="card price-card">
+        <div class="price-header">
+          <div class="ico">
+            <span class="material-symbols-outlined">ac_unit</span>
+          </div>
+          <div>
+            <h3>Cobertores & Mantas</h3>
+            <p>Microfibra, Lã e Cobertores Pesados</p>
+          </div>
+        </div>
+
+        <div class="price-value-box">
+          <span class="price-prefix">Higienização térmica a partir de</span>
+          <div class="price-number"><small>R$</small> 28,00</div>
+          <span class="price-unit">por unidade</span>
+        </div>
+
+        <ul class="feature-bullets">
+          <li><span class="material-symbols-outlined">check_circle</span> Revitalização do toque macio e aveludado</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Tratamento antialérgico completo</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Higienização profunda de fibras pesadas</li>
+          <li><span class="material-symbols-outlined">check_circle</span> Pronto para uso ou guarda de estação</li>
+        </ul>
+
+        <a href="#orcamento" class="btn btn-secondary">Agendar Coleta</a>
+      </article>
+
+    </div>
+
+    <!-- Faixa de Diferenciais -->
+    <div class="badges">
+      <div class="badge-item">
+        <span class="material-symbols-outlined">verified</span>
+        <div>
+          <strong>Cuidado Fibras Nobres</strong>
+          <span>Sem risco de encolhimento</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <span class="material-symbols-outlined">local_shipping</span>
+        <div>
+          <strong>Coleta & Entrega</strong>
+          <span>Comodidade para peças pesadas</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <span class="material-symbols-outlined">eco</span>
+        <div>
+          <strong>Produtos Neutros</strong>
+          <span>Hipoalergênicos e ecológicos</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabelas Completas (Baseadas na planilha Preços Alva.xlsx) -->
+  <section id="tabela-completa">
+    <h2>Relação Completa de Preços</h2>
+    <p class="section-desc">Consulte os valores para lavagem avulsa, passadoria ou serviço completo.</p>
+
+    <div class="tables-section-container">
+
+      <!-- 1. Volumosos / Casa -->
+      <div class="card table-card">
+        <div class="table-caption">
+          <span class="material-symbols-outlined">hotel</span>
+          Volumosos & Decoração (Casa)
+        </div>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Cobrança</th>
+              <th style="text-align: right;">Somente Lavar</th>
+              <th style="text-align: right;">Somente Passar</th>
+              <th style="text-align: right;">Lavar + Passar</th>
+              <th>Observações Técnicas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Edredom Solteiro</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 45,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 45,00</td>
+              <td class="col-desc">Secagem em câmara térmica antiácaro</td>
+            </tr>
+            <tr>
+              <td><strong>Edredom Casal / Queen</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 55,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 55,00</td>
+              <td class="col-desc">Enchimento uniforme sem deformação</td>
+            </tr>
+            <tr>
+              <td><strong>Edredom King</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 68,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 68,00</td>
+              <td class="col-desc">Exige tambor de grande capacidade</td>
+            </tr>
+            <tr>
+              <td><strong>Edredom de Plumas</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 85,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 85,00</td>
+              <td class="col-desc">Processo suave com secagem especial</td>
+            </tr>
+            <tr>
+              <td><strong>Cobertor Solteiro</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 38,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 38,00</td>
+              <td class="col-desc">Tratamento antialérgico</td>
+            </tr>
+            <tr>
+              <td><strong>Cobertor Casal / King</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 48,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 48,00</td>
+              <td class="col-desc">Higienização profunda de fibras</td>
+            </tr>
+            <tr>
+              <td><strong>Manta Microfibra</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 28,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 28,00</td>
+              <td class="col-desc">Revitalização do toque macio</td>
+            </tr>
+            <tr>
+              <td><strong>Tapete Sintético / Pelo Curto</strong></td>
+              <td>Metro quadrado (m²)</td>
+              <td class="col-val">R$ 38,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 38,00</td>
+              <td class="col-desc">Extração profunda de sujeira e ácaros</td>
+            </tr>
+            <tr>
+              <td><strong>Tapete Shaggy (Pelo Alto)</strong></td>
+              <td>Metro quadrado (m²)</td>
+              <td class="col-val">R$ 48,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 48,00</td>
+              <td class="col-desc">Secagem suspensa e escovação</td>
+            </tr>
+            <tr>
+              <td><strong>Tapete Persa / Tear Artesanal</strong></td>
+              <td>Metro quadrado (m²)</td>
+              <td class="col-val">R$ 65,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 65,00</td>
+              <td class="col-desc">Limpeza manual com pH neutro</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 2. Cama, Mesa e Banho -->
+      <div class="card table-card">
+        <div class="table-caption">
+          <span class="material-symbols-outlined">bathtub</span>
+          Cama, Mesa e Banho
+        </div>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Cobrança</th>
+              <th style="text-align: right;">Somente Lavar</th>
+              <th style="text-align: right;">Somente Passar</th>
+              <th style="text-align: right;">Lavar + Passar</th>
+              <th>Observações Técnicas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Lençol Avulso (Solteiro/Casal)</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 10,00</td>
+              <td class="col-val">R$ 8,00</td>
+              <td class="col-val">R$ 15,00</td>
+              <td class="col-desc">Dobra com acabamento a vapor</td>
+            </tr>
+            <tr>
+              <td><strong>Jogo de Cama Completo (4 pçs)</strong></td>
+              <td>Jogo</td>
+              <td class="col-val">R$ 28,00</td>
+              <td class="col-val">R$ 22,00</td>
+              <td class="col-val">R$ 44,00</td>
+              <td class="col-desc">Lençol cima, elástico e 2 fronhas</td>
+            </tr>
+            <tr>
+              <td><strong>Fronha Avulsa</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 4,00</td>
+              <td class="col-val">R$ 3,50</td>
+              <td class="col-val">R$ 6,50</td>
+              <td class="col-desc">Passadoria lisa</td>
+            </tr>
+            <tr>
+              <td><strong>Toalha de Banho</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 8,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 8,00</td>
+              <td class="col-desc">Toalhas não requerem passadoria</td>
+            </tr>
+            <tr>
+              <td><strong>Toalha de Rosto / Piso</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 5,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 5,00</td>
+              <td class="col-desc">Higienização antibacteriana</td>
+            </tr>
+            <tr>
+              <td><strong>Toalha de Mesa Simples</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 12,00</td>
+              <td class="col-val">R$ 10,00</td>
+              <td class="col-val">R$ 19,00</td>
+              <td class="col-desc">Até 6 lugares</td>
+            </tr>
+            <tr>
+              <td><strong>Toalha de Mesa Festas/Renda</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 20,00</td>
+              <td class="col-val">R$ 18,00</td>
+              <td class="col-val">R$ 34,00</td>
+              <td class="col-desc">Cuidado com bordados e rendas</td>
+            </tr>
+            <tr>
+              <td><strong>Cortina Leve (Voil / Microfibra)</strong></td>
+              <td>Metro linear (m)</td>
+              <td class="col-val">R$ 16,00</td>
+              <td class="col-val">R$ 12,00</td>
+              <td class="col-val">R$ 25,00</td>
+              <td class="col-desc">Lavagem sem danificar ilhós</td>
+            </tr>
+            <tr>
+              <td><strong>Cortina Blackout / Pesada</strong></td>
+              <td>Metro linear (m)</td>
+              <td class="col-val">R$ 24,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 24,00</td>
+              <td class="col-desc">Higienização a vapor sem calor direto</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 3. Dia a Dia (Básicas) -->
+      <div class="card table-card">
+        <div class="table-caption">
+          <span class="material-symbols-outlined">dry_cleaning</span>
+          Dia a Dia (Básicas)
+        </div>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Cobrança</th>
+              <th style="text-align: right;">Somente Lavar</th>
+              <th style="text-align: right;">Somente Passar</th>
+              <th style="text-align: right;">Lavar + Passar</th>
+              <th>Observações Técnicas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Camiseta / Polo</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 7,00</td>
+              <td class="col-val">R$ 6,00</td>
+              <td class="col-val">R$ 11,50</td>
+              <td class="col-desc">Passadoria no cabide ou dobrada</td>
+            </tr>
+            <tr>
+              <td><strong>Camisa Polo</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 8,00</td>
+              <td class="col-val">R$ 7,00</td>
+              <td class="col-val">R$ 13,00</td>
+              <td class="col-desc">Colarinho alinhado</td>
+            </tr>
+            <tr>
+              <td><strong>Bermuda / Shorts</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 7,50</td>
+              <td class="col-val">R$ 6,00</td>
+              <td class="col-val">R$ 12,00</td>
+              <td class="col-desc">Dobra simples</td>
+            </tr>
+            <tr>
+              <td><strong>Calça Jeans / Sarja</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 10,00</td>
+              <td class="col-val">R$ 8,00</td>
+              <td class="col-val">R$ 16,00</td>
+              <td class="col-desc">Fixação de vincos (opcional)</td>
+            </tr>
+            <tr>
+              <td><strong>Moletom (Blusa)</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 12,00</td>
+              <td class="col-val">R$ 8,00</td>
+              <td class="col-val">R$ 18,00</td>
+              <td class="col-desc">Tratamento antifelpas</td>
+            </tr>
+            <tr>
+              <td><strong>Moletom (Calça)</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 10,00</td>
+              <td class="col-val">R$ 7,00</td>
+              <td class="col-val">R$ 15,00</td>
+              <td class="col-desc">Sem deformar o cós</td>
+            </tr>
+            <tr>
+              <td><strong>Cesto Dia a Dia (até 8kg)</strong></td>
+              <td>Cesto fechado</td>
+              <td class="col-val">R$ 55,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">—</td>
+              <td class="col-desc">Somente lavar, secar e dobrar</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 4. Alfaiataria e Finas -->
+      <div class="card table-card">
+        <div class="table-caption">
+          <span class="material-symbols-outlined">checkroom</span>
+          Alfaiataria e Peças Finas
+        </div>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Cobrança</th>
+              <th style="text-align: right;">Somente Lavar</th>
+              <th style="text-align: right;">Somente Passar</th>
+              <th style="text-align: right;">Lavar + Passar</th>
+              <th>Observações Técnicas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Camisa Social Masculina/Fem.</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 11,00</td>
+              <td class="col-val">R$ 10,00</td>
+              <td class="col-val">R$ 18,50</td>
+              <td class="col-desc">Colarinho e punhos passados a vapor</td>
+            </tr>
+            <tr>
+              <td><strong>Calça Social</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 12,00</td>
+              <td class="col-val">R$ 10,00</td>
+              <td class="col-val">R$ 19,00</td>
+              <td class="col-desc">Vinco alinhado</td>
+            </tr>
+            <tr>
+              <td><strong>Blazer / Paletó</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 28,00</td>
+              <td class="col-val">R$ 18,00</td>
+              <td class="col-val">R$ 40,00</td>
+              <td class="col-desc">Lavagem a seco ou suave especializada</td>
+            </tr>
+            <tr>
+              <td><strong>Terno Completo (2 peças)</strong></td>
+              <td>Conjunto</td>
+              <td class="col-val">R$ 38,00</td>
+              <td class="col-val">R$ 26,00</td>
+              <td class="col-val">R$ 56,00</td>
+              <td class="col-desc">Acompanha capa protetora no cabide</td>
+            </tr>
+            <tr>
+              <td><strong>Vestido Curto Simples</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 16,00</td>
+              <td class="col-val">R$ 12,00</td>
+              <td class="col-val">R$ 25,00</td>
+              <td class="col-desc">Tecidos mistos</td>
+            </tr>
+            <tr>
+              <td><strong>Vestido Longo / Festa</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 45,00</td>
+              <td class="col-val">R$ 35,00</td>
+              <td class="col-val">R$ 72,00</td>
+              <td class="col-desc">Seda, cetim, pedrarias ou pregas</td>
+            </tr>
+            <tr>
+              <td><strong>Saia Social / Plissada</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 14,00</td>
+              <td class="col-val">R$ 12,00</td>
+              <td class="col-val">R$ 23,00</td>
+              <td class="col-desc">Recomposição de plissado sob consulta</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 5. Inverno e Especiais -->
+      <div class="card table-card">
+        <div class="table-caption">
+          <span class="material-symbols-outlined">ac_unit</span>
+          Inverno e Peças Especiais
+        </div>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Cobrança</th>
+              <th style="text-align: right;">Somente Lavar</th>
+              <th style="text-align: right;">Somente Passar</th>
+              <th style="text-align: right;">Lavar + Passar</th>
+              <th>Observações Técnicas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Sobretudo / Casaco Pesado</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 35,00</td>
+              <td class="col-val">R$ 20,00</td>
+              <td class="col-val">R$ 48,00</td>
+              <td class="col-desc">Secagem controlada sem amassar o forro</td>
+            </tr>
+            <tr>
+              <td><strong>Jaqueta de Nylon / Puffer</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 28,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 28,00</td>
+              <td class="col-desc">Redistribuição das câmaras de fibra</td>
+            </tr>
+            <tr>
+              <td><strong>Jaqueta de Couro Natural</strong></td>
+              <td>Unidade</td>
+              <td class="col-val">R$ 85,00</td>
+              <td class="col-val">—</td>
+              <td class="col-val">R$ 85,00</td>
+              <td class="col-desc">Higienização e hidratação do couro</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Orçamento & Contato com CTA estruturado -->
+  <section id="orcamento">
+    <div class="cta-box">
+      <h2>Solicite seu orçamento sem compromisso</h2>
+      <p>Envie a quantidade de peças ou as medidas do seu tapete e confirmamos o valor rapidamente.</p>
+      
+      <form class="cta-form" onsubmit="event.preventDefault(); alert('Solicitação recebida! Em breve entraremos em contato.');">
+        <input type="text" placeholder="Seu Nome Completo" required>
+        <input type="tel" placeholder="Seu Telefone / WhatsApp" required>
+        
+        <select class="full-col" required>
+          <option value="" disabled selected>Selecione a categoria principal</option>
+          <option value="volumosos">Volumosos / Casa (Edredom, Tapete, Cobertor)</option>
+          <option value="dia-a-dia">Dia a Dia (Básicas ou Cesto 8kg)</option>
+          <option value="cama-mesa-banho">Cama, Mesa e Banho</option>
+          <option value="alfaiataria">Alfaiataria e Peças Finas</option>
+          <option value="inverno">Inverno e Couro</option>
+        </select>
+
+        <textarea class="full-col" rows="3" placeholder="Detalhes (ex: 1 Edredom King, 2 calças jeans e 1 tapete 2x3m)"></textarea>
+
+        <button type="submit" class="btn btn-light full-col">
+          <span class="material-symbols-outlined">send</span>
+          Calcular Orçamento
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Rodapé padrão -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <h3>Lavanderia Alva</h3>
+        <p>Higiene profunda, cuidado com os tecidos e comodidade no seu dia a dia.</p>
+      </div>
+      <div>
+        <p><strong>Atendimento:</strong></p>
+        <p>Segunda a Sexta: 08h às 19h | Sábado: 08h às 14h</p>
+        <p>contato@lavanderiaalva.com.br</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Lavanderia Alva. Todos os direitos reservados. Valores válidos sob confirmação presencial de estado do tecido.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

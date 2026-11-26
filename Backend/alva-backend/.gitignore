@@ -1,0 +1,15 @@
+# Build
+target/
+*.class
+
+# Variáveis de ambiente (NUNCA commitar valores reais)
+.env
+application-local.properties
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log

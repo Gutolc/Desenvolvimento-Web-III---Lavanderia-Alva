@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Lavanderia Alva | Cuidado e Praticidade para suas Roupas</title>
+
+    <!-- Fontes (Poppins nos títulos, Inter no corpo) e ícones (Material Symbols) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Design tokens primeiro, depois o CSS da página -->
+    <style>
+/* ==========================================================
+   Design tokens: Lavanderia
+   Fonte única de verdade para cores, fontes e espaçamentos.
+   Documentação completa em docs/design.md
+   ========================================================== */
+
+:root {
+  /* ---------- Cores base ---------- */
+  --color-bg: #EFF6FF;
+  --color-surface: #FFFFFF;
+  --color-primary: #0284C7;
+  --color-primary-dark: #0369A1;
+  --color-accent: #38BDF8;
+
+  /* ---------- Cores complementares ---------- */
+  --color-primary-light: #BAE6FD;
+  --color-border: #DBEAFE;
+  --color-text: #0F172A;
+  --color-text-muted: #475569;
+
+  /* ---------- Feedback ---------- */
+  --color-success: #16A34A;
+  --color-warning: #F59E0B;
+  --color-error: #DC2626;
+
+  /* ---------- Tipografia ---------- */
+  --font-title: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+
+  /* ---------- Espaçamento ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* ---------- Bordas e sombras ---------- */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-card: 0 2px 8px rgba(3, 105, 161, 0.08);
+}
+
+/* ---------- Base ---------- */
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-title);
+  color: var(--color-text);
+  line-height: 1.25;
+}
+
+a {
+  color: var(--color-primary-dark);
+}
+
+/* ---------- Ícones ---------- */
+.material-symbols-outlined {
+  font-size: 24px;
+  color: var(--color-primary);
+  vertical-align: middle;
+}
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+.btn-secondary:hover {
+  background: var(--color-primary-light);
+}
+
+/* ---------- Card ---------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-6);
+}
+
+/* ---------- Inputs ---------- */
+input, select, textarea {
+  font-family: var(--font-body);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* ==========================================================
+   Lavanderia Alva: estilos da página inicial
+   Depende de styles/tokens.css (carregar antes deste arquivo).
+   Regra: nenhuma cor ou fonte "solta" aqui, só var(--...).
+   ========================================================== */
+
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+* { box-sizing: border-box; }
+
+:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+
+.btn { text-decoration: none; }
+.btn .material-symbols-outlined { color: inherit; }
+.btn-light { background: var(--color-surface); color: var(--color-primary-dark); }
+.btn-light:hover { background: var(--color-primary-light); }
+
+section { padding: var(--space-8) 5%; }
+section h2 { font-size: var(--text-xl); text-align: center; margin: 0 0 var(--space-2); }
+.section-desc { text-align: center; color: var(--color-text-muted); margin: 0 auto var(--space-8); max-width: 60ch; }
+
+/* ---------- Navbar ---------- */
+.navbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  padding: var(--space-3) 5%;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+.logo {
+  display: flex; align-items: center; gap: var(--space-2);
+  font: 700 var(--text-lg) var(--font-title);
+  color: var(--color-text); text-decoration: none;
+}
+.logo .material-symbols-outlined { font-size: 32px; }
+.logo span:not(.material-symbols-outlined) { font-weight: 500; color: var(--color-primary-dark); }
+.nav-links { display: flex; align-items: center; gap: var(--space-6); list-style: none; margin: 0; padding: 0; }
+.nav-links a:not(.btn) { color: var(--color-text); text-decoration: none; font-weight: 500; }
+.nav-links a:not(.btn):hover { color: var(--color-primary-dark); text-decoration: underline; }
+.btn-nav { padding: var(--space-2) var(--space-4); }
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--space-8); align-items: center;
+  max-width: 1100px; margin: 0 auto; padding: 64px 5%;
+}
+.hero h1 { font-size: clamp(2rem, 5vw, 2.75rem); margin: 0; }
+.hero p { font-size: var(--text-lg); color: var(--color-text-muted); max-width: 46ch; margin: var(--space-4) 0 var(--space-6); }
+.hero-buttons { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+.porthole {
+  position: relative; width: min(340px, 80%); aspect-ratio: 1; margin: 0 auto;
+  border-radius: 50%; border: 14px solid var(--color-primary-dark);
+  background: var(--color-surface); overflow: hidden;
+  box-shadow: 0 12px 32px rgba(3, 105, 161, 0.25);
+}
+.porthole::before, .porthole::after {
+  content: ""; position: absolute; left: -50%; width: 200%; height: 200%;
+  border-radius: 40%; animation: spin 11s linear infinite;
+}
+.porthole::before { top: 44%; background: var(--color-accent); opacity: 0.9; }
+.porthole::after { top: 50%; background: var(--color-primary); opacity: 0.55; animation-duration: 17s; animation-direction: reverse; }
+.porthole .material-symbols-outlined {
+  position: absolute; inset: 0; display: grid; place-items: center; z-index: 2;
+  font-size: 104px; color: var(--color-surface); text-shadow: 0 2px 12px rgba(3, 105, 161, 0.5);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .porthole::before, .porthole::after { animation: none; } }
+
+/* ---------- Faixa de diferenciais ---------- */
+.badges {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4);
+  max-width: 1100px; margin: 0 auto;
+}
+.badge-item {
+  display: flex; align-items: center; gap: var(--space-3);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-4) var(--space-6);
+}
+.badge-item .material-symbols-outlined { font-size: 32px; }
+.badge-item strong { display: block; font-family: var(--font-title); }
+.badge-item div span { color: var(--color-text-muted); font-size: var(--text-sm); }
+
+/* ---------- Como funciona ---------- */
+.steps-grid, .services-grid {
+  display: grid; gap: var(--space-4); max-width: 1100px; margin: 0 auto;
+}
+.steps-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.services-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.step-card h3, .service-card h3 { font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2); }
+.step-card p, .service-card p { margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+.step-num {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--color-primary); color: var(--color-surface);
+  font: 700 var(--text-lg) var(--font-title);
+}
+
+/* ---------- Serviços ---------- */
+.service-card { position: relative; }
+.ico {
+  display: grid; place-items: center; width: 48px; height: 48px;
+  border-radius: var(--radius-md); background: var(--color-primary-light);
+}
+.service-card.highlight { border: 2px solid var(--color-primary); }
+.badge-popular {
+  position: absolute; top: var(--space-4); right: var(--space-4);
+  padding: var(--space-1) var(--space-3); border-radius: 999px;
+  background: var(--color-primary-dark); color: var(--color-surface);
+  font-size: var(--text-xs); font-weight: 600;
+}
+
+/* ---------- CTA ---------- */
+.cta-box {
+  max-width: 800px; margin: 0 auto; padding: var(--space-8) var(--space-6);
+  text-align: center; border-radius: var(--radius-lg);
+  background: var(--color-primary-dark); color: var(--color-surface);
+}
+.cta-box h2 { color: var(--color-surface); }
+.cta-box p { margin: 0 0 var(--space-6); color: var(--color-primary-light); }
+
+/* ---------- Rodapé ---------- */
+footer { margin-top: var(--space-8); padding: var(--space-8) 5% var(--space-4); background: var(--color-text); color: var(--color-bg); }
+.footer-content { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-6); max-width: 1100px; margin: 0 auto; }
+footer h3 { color: var(--color-surface); margin: 0 0 var(--space-2); }
+footer p { margin: 0 0 var(--space-1); color: var(--color-primary-light); font-size: var(--text-sm); }
+footer strong { color: var(--color-surface); }
+.footer-bottom { max-width: 1100px; margin: var(--space-6) auto 0; padding-top: var(--space-4); border-top: 1px solid var(--color-text-muted); }
+.footer-bottom p { margin: 0; text-align: center; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; padding: var(--space-8) 5%; }
+  .nav-links li:not(:last-child) { display: none; }
+}
+
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+</style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="#inicio" class="logo">
+            <span class="material-symbols-outlined" aria-hidden="true">local_laundry_service</span>
+            Alva<span> Lavanderia</span>
+        </a>
+        <nav aria-label="Principal">
+            <ul class="nav-links">
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#como-funciona">Como Funciona</a></li>
+                <li><a href="#servicos">Serviços</a></li>
+                <li><a href="precos.html">Preços</a></li>
+                <li><a href="#contato" class="btn btn-primary btn-nav">Agendar Coleta</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="inicio">
+            <div class="hero-content">
+                <h1>Suas roupas limpas e macias sem você sair de casa</h1>
+                <p>Retiramos no seu endereço, lavamos com tecnologia de ponta e entregamos tudo dobrado e perfumado em até 48 horas.</p>
+                <div class="hero-buttons">
+                    <a href="#contato" class="btn btn-primary">
+                        <span class="material-symbols-outlined" aria-hidden="true">schedule</span>Pedir Coleta Grátis
+                    </a>
+                    <a href="#como-funciona" class="btn btn-secondary">Entenda o Processo</a>
+                </div>
+            </div>
+            <div class="porthole" role="img" aria-label="Ilustração de uma máquina de lavar com uma camiseta">
+                <span class="material-symbols-outlined" aria-hidden="true">checkroom</span>
+            </div>
+        </section>
+
+        <section class="badges">
+            <div class="badge-item">
+                <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+                <div>
+                    <strong>Coleta &amp; Entrega</strong>
+                    <span>Direto na sua porta</span>
+                </div>
+            </div>
+            <div class="badge-item">
+                <span class="material-symbols-outlined" aria-hidden="true">wash</span>
+                <div>
+                    <strong>Produtos Premium</strong>
+                    <span>Proteção total às fibras</span>
+                </div>
+            </div>
+            <div class="badge-item">
+                <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+                <div>
+                    <strong>Agilidade</strong>
+                    <span>Pronto em 24h a 48h</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works" id="como-funciona">
+            <h2>Como Funciona?</h2>
+            <p class="section-desc">Praticidade em quatro passos rápidos.</p>
+
+            <div class="steps-grid">
+                <div class="step-card card">
+                    <div class="step-num">1</div>
+                    <h3>Agende</h3>
+                    <p>Escolha o melhor dia e horário para a retirada das suas peças.</p>
+                </div>
+                <div class="step-card card">
+                    <div class="step-num">2</div>
+                    <h3>Buscamos</h3>
+                    <p>Nossa equipe coleta seu pacote no endereço solicitado.</p>
+                </div>
+                <div class="step-card card">
+                    <div class="step-num">3</div>
+                    <h3>Tratamos</h3>
+                    <p>Lavagem, secagem e passadoria com controle minucioso de manchas.</p>
+                </div>
+                <div class="step-card card">
+                    <div class="step-num">4</div>
+                    <h3>Entregamos</h3>
+                    <p>Suas roupas voltam embaladas, dobradas ou no cabide, prontas para uso.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="services" id="servicos">
+            <h2>Nossos Serviços</h2>
+            <p class="section-desc">Soluções completas para peças do dia a dia ou tecidos delicados.</p>
+
+            <div class="services-grid">
+                <div class="service-card card">
+                    <div class="ico"><span class="material-symbols-outlined" aria-hidden="true">local_laundry_service</span></div>
+                    <h3>Dia a Dia por Quilo</h3>
+                    <p>Camisetas, bermudas, toalhas e roupas cotidianas lavadas, secas e dobradas.</p>
+                </div>
+                <div class="service-card card highlight">
+                    <div class="badge-popular">Mais Pedido</div>
+                    <div class="ico"><span class="material-symbols-outlined" aria-hidden="true">wash</span></div>
+                    <h3>Cama, Mesa e Banho</h3>
+                    <p>Edredons, cobertores, cortinas e lençóis higienizados a fundo.</p>
+                </div>
+                <div class="service-card card">
+                    <div class="ico"><span class="material-symbols-outlined" aria-hidden="true">dry_cleaning</span></div>
+                    <h3>Peças Delicadas &amp; Ternos</h3>
+                    <p>Lavagem a seco especializada para paletós, vestidos de festa e seda.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta" id="contato">
+            <div class="cta-box">
+                <h2>Pronto para economizar tempo?</h2>
+                <p>Agende sua primeira coleta agora mesmo e tenha frete grátis.</p>
+                <a href="https://wa.me/" class="btn btn-light">Chamar no WhatsApp</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h3>Alva</h3>
+                <p>Cuidando do seu guarda-roupa com agilidade e sustentabilidade.</p>
+            </div>
+            <div class="footer-contact">
+                <p><strong>Horário de Funcionamento:</strong></p>
+                <p>Seg a Sex: 08h às 19h | Sáb: 08h às 14h</p>
+                <p>contato@alva.com.br</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Alva. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
