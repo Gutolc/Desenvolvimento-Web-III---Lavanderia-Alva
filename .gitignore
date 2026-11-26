@@ -75,3 +75,5 @@ hs_err_pid*
 # ==========================================
 *.sqlite
 *.db
+backend/.env
+backend/.env
