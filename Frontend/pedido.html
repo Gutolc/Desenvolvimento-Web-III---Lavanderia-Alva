@@ -41,7 +41,7 @@
         </div>
         <div class="field-group">
           <label for="cliWhatsapp">WhatsApp (com DDD) *</label>
-          <input type="tel" id="cliWhatsapp" placeholder="Ex: 11998887766" required>
+         <input type="tel" id="cliWhatsapp" placeholder="(11) 99888-7766" maxlength="15" required>
         </div>
         <div class="field-group">
           <label for="cliEmail">E-mail para Comprovante *</label>
@@ -158,5 +158,25 @@
   <script src="js/api.js"></script>
   <script src="js/carrinho.js"></script>
   <script src="js/checkout.js"></script>
+  <script>
+  (function () {
+    const input = document.getElementById('cliWhatsapp');
+    if (!input) return;
+
+    input.addEventListener('input', () => {
+      let v = input.value.replace(/\D/g, '').slice(0, 11);
+      if (v.length > 10) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+      } else if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+      } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+      } else if (v.length > 0) {
+        v = v.replace(/^(\d*)/, '($1');
+      }
+      input.value = v;
+    });
+  })();
+</script>
 </body>
 </html>
